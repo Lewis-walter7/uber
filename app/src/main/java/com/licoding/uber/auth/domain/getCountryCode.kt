@@ -2,7 +2,6 @@ package com.licoding.uber.auth.domain
 
 import android.content.Context
 import android.telephony.TelephonyManager
-import androidx.compose.ui.text.toUpperCase
 import com.licoding.uber.core.data.countryPhoneCodes
 import java.util.*
 
@@ -23,10 +22,10 @@ fun getCountryCode(context: Context): String{
 
 }
 
-fun getCode(countryIso: String?): String?{
-    return countryPhoneCodes[countryIso?.uppercase(Locale.ROOT)]
+fun getCode(countryIso: String?): String {
+    return countryPhoneCodes[countryIso?.uppercase(Locale.ROOT)]?.get("code").toString()
 }
-//
-//fun getPhoneNumberLen(countryIso: String?): Int {
-//    return countryPhoneCodes[countryIso].uppercase(Locale.ROOT)
-//}
+
+fun getPhoneNumberLen(countryIso: String?): String {
+    return countryPhoneCodes[countryIso?.uppercase(Locale.ROOT)]?.get("length").toString()
+}

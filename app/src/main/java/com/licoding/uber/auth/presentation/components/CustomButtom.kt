@@ -23,7 +23,7 @@ fun CustomButtom(
     text: String,
     color: Color,
     textColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     TextButton(
         onClick = {
@@ -31,7 +31,7 @@ fun CustomButtom(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = color, shape = RoundedCornerShape(10.dp))
+            .background(color = color, shape = RoundedCornerShape(10.dp)),
     ) {
         Row (
             verticalAlignment = Alignment.CenterVertically

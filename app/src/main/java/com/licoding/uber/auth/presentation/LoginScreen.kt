@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.licoding.uber.auth.domain.detectCountry
 import com.licoding.uber.auth.domain.getCountryCode
+import com.licoding.uber.auth.domain.getPhoneNumberLen
 import com.licoding.uber.auth.presentation.components.CustomAction
 import com.licoding.uber.auth.presentation.components.CustomButtom
 import com.licoding.uber.auth.presentation.components.CustomDivider
@@ -33,11 +34,14 @@ import java.util.*
 @Composable
 fun LoginScreen(
     context: Context,
-    navController: NavController
+    navController: NavController,
+    state: AuthUIState,
+    onEvent: (AuthUIEvent) -> Unit
 ) {
     val country = detectCountry(context)
     val code = getCountryCode(context)
-    var text by remember { mutableStateOf("") }
+    val len = getPhoneNumberLen(country).toInt()
+    val number by remember { mutableStateOf(state.phoneNumber) }
 
     Column(
         modifier = Modifier
@@ -89,27 +93,43 @@ fun LoginScreen(
                     )
                     BasicTextField(
                         onValueChange = {
-                            text = it
+                            //number = it
+                            if (state.phoneNumber?.length == len && state.phoneNumberError != null) {
+                                onEvent(AuthUIEvent.SetPhoneNumberError(""))
+                            } else if (state.phoneNumber?.length!! < 11) {
+                                onEvent(AuthUIEvent.OnPhoneNumberChange(it))
+                            }
                         },
-                        value = text,
+                        value = state.phoneNumber ?: "",
                         decorationBox = { innerTextField ->
-                            if (text.isEmpty()) {
+                            if (number?.isEmpty() == true) {
                                 Text(text = "Mobile number", color = Color.Gray)
                             }
                             innerTextField()
                         },
                         textStyle = TextStyle(
-                            color = Color.White,
+                            color = Color.Black,
                             fontSize = 20.sp,
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.NumberPassword
                         )
                     )
                 }
             }
         }
-
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+        if (state.phoneNumberError != null && state.phoneNumberError != "") {
+            Text(
+                text = state.phoneNumberError,
+                fontSize = 15.sp,
+                color = Color.Red,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         Spacer(
             modifier = Modifier.height(16.dp)
         )
@@ -119,8 +139,15 @@ fun LoginScreen(
             icon = null,
             textColor = Color.White,
             onClick = {
-                navController.navigate("verification")
-            }
+                if(state.phoneNumber?.length == len) {
+                    navController.navigate("verification")
+                    if (state.phoneNumberError != null) {
+                        onEvent(AuthUIEvent.SetPhoneNumberError(""))
+                    }
+                } else {
+                    onEvent(AuthUIEvent.SetPhoneNumberError("Invalid phone number."))
+                }
+            },
         )
         Spacer(
             modifier = Modifier.height(23.dp)
@@ -137,7 +164,7 @@ fun LoginScreen(
             textColor = Color.Black,
             onClick = {
                 navController.navigate("verification")
-            }
+            },
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -149,7 +176,7 @@ fun LoginScreen(
             textColor = Color.Black,
             onClick = {
                 navController.navigate("verification")
-            }
+            },
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -161,7 +188,7 @@ fun LoginScreen(
             textColor = Color.Black,
             onClick = {
                 navController.navigate("verification")
-            }
+            },
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -173,7 +200,7 @@ fun LoginScreen(
             textColor = Color.Black,
             onClick = {
                 navController.navigate("verification")
-            }
+            },
         )
         Spacer(
             modifier = Modifier.height(23.dp)
