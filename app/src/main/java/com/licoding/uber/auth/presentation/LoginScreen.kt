@@ -1,6 +1,7 @@
 package com.licoding.uber.auth.presentation
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,7 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.licoding.uber.auth.domain.detectCountry
+import com.licoding.uber.R
+import com.licoding.uber.auth.domain.util.detectCountry
 import com.licoding.uber.auth.domain.getCountryCode
 import com.licoding.uber.auth.domain.getPhoneNumberLen
 import com.licoding.uber.auth.presentation.components.CustomAction
@@ -36,12 +39,23 @@ fun LoginScreen(
     context: Context,
     navController: NavController,
     state: AuthUIState,
-    onEvent: (AuthUIEvent) -> Unit
+    onEvent: (AuthUIEvent) -> Unit,
+    onGoogleSignUp: () -> Unit
 ) {
     val country = detectCountry(context)
     val code = getCountryCode(context)
     val len = getPhoneNumberLen(country).toInt()
-    val number by remember { mutableStateOf(state.phoneNumber) }
+    var number by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -93,16 +107,16 @@ fun LoginScreen(
                     )
                     BasicTextField(
                         onValueChange = {
-                            //number = it
-                            if (state.phoneNumber?.length == len && state.phoneNumberError != null) {
+                            number = it
+                            if (number.length == len && state.phoneNumberError != null) {
                                 onEvent(AuthUIEvent.SetPhoneNumberError(""))
-                            } else if (state.phoneNumber?.length!! < 11) {
-                                onEvent(AuthUIEvent.OnPhoneNumberChange(it))
+                            } else if (number.length < 11) {
+                                onEvent(AuthUIEvent.OnPhoneNumberChange(number))
                             }
                         },
                         value = state.phoneNumber ?: "",
                         decorationBox = { innerTextField ->
-                            if (number?.isEmpty() == true) {
+                            if (number.isEmpty()) {
                                 Text(text = "Mobile number", color = Color.Gray)
                             }
                             innerTextField()
@@ -136,7 +150,6 @@ fun LoginScreen(
         CustomButtom(
             text = "Continue",
             color = Color.Black,
-            icon = null,
             textColor = Color.White,
             onClick = {
                 if(state.phoneNumber?.length == len) {
@@ -163,8 +176,9 @@ fun LoginScreen(
             icon = null,
             textColor = Color.Black,
             onClick = {
-                navController.navigate("verification")
+                onGoogleSignUp()
             },
+            painter = painterResource(R.drawable.google)
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -177,6 +191,7 @@ fun LoginScreen(
             onClick = {
                 navController.navigate("verification")
             },
+            painter = painterResource(R.drawable.apple)
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -184,11 +199,11 @@ fun LoginScreen(
         CustomButtom(
             text = "Continue with Facebook",
             color = Color.LightGray,
-            icon = Icons.Filled.Face,
             textColor = Color.Black,
             onClick = {
                 navController.navigate("verification")
             },
+            painter = painterResource(R.drawable.facebook)
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -199,7 +214,7 @@ fun LoginScreen(
             icon = Icons.Default.Email,
             textColor = Color.Black,
             onClick = {
-                navController.navigate("verification")
+                navController.navigate("emailsignin")
             },
         )
         Spacer(

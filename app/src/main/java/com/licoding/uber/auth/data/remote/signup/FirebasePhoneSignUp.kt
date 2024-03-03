@@ -1,4 +1,4 @@
-package com.licoding.uber.auth.domain.signup
+package com.licoding.uber.auth.data.remote.signup
 
 import android.widget.Toast
 import androidx.compose.runtime.rememberCoroutineScope

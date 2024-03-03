@@ -11,10 +11,12 @@ composeBom = "2024.02.01"
 appcompat = "1.6.1"
 material = "1.11.0"
 androidx-core-splashscreen = "1.0.1"
+materialIconsExtendedAndroid = "1.6.2"
 
 
 
 [libraries]
+androidx-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -72,5 +72,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation(libs.core.splashscreen)
+    implementation(libs.androidx.material.icons.extended.android)
 
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 }

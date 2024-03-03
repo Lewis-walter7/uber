@@ -1,4 +1,4 @@
-package com.licoding.uber.auth.domain
+package com.licoding.uber.auth.domain.util
 
 import android.content.Context
 import android.telephony.TelephonyManager
