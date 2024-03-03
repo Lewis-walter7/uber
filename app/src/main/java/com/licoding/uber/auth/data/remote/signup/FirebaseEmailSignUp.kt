@@ -1,7 +1,7 @@
 package com.licoding.uber.auth.data.remote.signup
 
 import com.licoding.uber.auth.domain.models.AuthRequest
-import com.licoding.uber.core.domain.User
+import com.licoding.uber.core.domain.models.User
 import android.app.Application
 import android.util.Log
 import android.widget.Toast

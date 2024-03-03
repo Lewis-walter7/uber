@@ -2,8 +2,7 @@ package com.licoding.uber.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.licoding.uber.core.domain.SignInResult
+import com.licoding.uber.core.domain.models.SignInResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

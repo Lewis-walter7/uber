@@ -10,8 +10,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.licoding.uber.R
-import com.licoding.uber.core.domain.SignInResult
-import com.licoding.uber.core.domain.User
+import com.licoding.uber.core.domain.models.SignInResult
+import com.licoding.uber.core.domain.models.User
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 

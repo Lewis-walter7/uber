@@ -1,4 +1,4 @@
-package com.licoding.uber.core.domain
+package com.licoding.uber.core.domain.models
 
 data class User(
     val name: String? = null,
