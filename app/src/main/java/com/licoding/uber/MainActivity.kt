@@ -1,34 +1,47 @@
 package com.licoding.uber
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.identity.Identity
 import com.licoding.uber.core.domain.models.BottomNavigationItem
-import com.licoding.uber.main.presentation.Activity
-import com.licoding.uber.main.presentation.Home
-import com.licoding.uber.main.presentation.Profile
-import com.licoding.uber.main.presentation.Services
+import com.licoding.uber.activity.presentation.Activity
+import com.licoding.uber.auth.data.remote.signup.google.GoogleAuthUiClient
+import com.licoding.uber.home.presentation.Home
+import com.licoding.uber.profile.presentation.Profile
+import com.licoding.uber.services.presentation.Services
 import com.licoding.uber.ui.theme.UberTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            context = applicationContext,
+            oneTapClient = Identity.getSignInClient(applicationContext)
+        )
+    }
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val currentUser = googleAuthUiClient.getSignedInUser()
         setContent {
             var selectedRoute by remember {
-                mutableStateOf("")
+                mutableStateOf("home")
             }
             val items = listOf(
                 BottomNavigationItem(
@@ -38,12 +51,12 @@ class MainActivity : ComponentActivity() {
                 ),
                 BottomNavigationItem(
                     label = "Services",
-                    icon = Icons.Default.Home,
+                    icon = Icons.Default.Apps,
                     route = "services"
                 ),
                 BottomNavigationItem(
                     label = "Activity",
-                    icon = Icons.Default.Home,
+                    icon = Icons.Default.Bookmark,
                     route = "activity"
                 ),
                 BottomNavigationItem(
@@ -52,6 +65,8 @@ class MainActivity : ComponentActivity() {
                     route = "profile"
                 )
             )
+
+            val scope = rememberCoroutineScope()
             UberTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
@@ -89,7 +104,15 @@ class MainActivity : ComponentActivity() {
                                 Home(navController)
                             }
                             composable("profile") {
-                                Profile(navController)
+                                Profile(
+                                    navController = navController,
+                                    user = currentUser!!,
+                                    onClick = {
+                                        scope.launch {
+                                            googleAuthUiClient.signOut()
+                                        }
+                                    }
+                                )
                             }
                             composable("activity") {
                                 Activity(navController)

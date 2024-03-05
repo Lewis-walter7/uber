@@ -1,4 +1,4 @@
-package com.licoding.uber.main.presentation
+package com.licoding.uber.services.presentation
 
 
 import androidx.compose.material3.Text
@@ -8,5 +8,4 @@ import androidx.navigation.NavController
 @Composable
 fun Services(navController: NavController) {
     Text("Hallo S")
-
 }

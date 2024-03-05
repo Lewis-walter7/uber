@@ -63,11 +63,6 @@ class LoginActivity: ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
                     val navController = rememberNavController()
 
-                    LaunchedEffect(key1 = Unit) {
-                        if(googleAuthUiClient.getSignedInUser() != null) {
-                            navController.navigate("profile")
-                        }
-                    }
                     val launcher = rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.StartIntentSenderForResult(),
                         onResult = { result ->

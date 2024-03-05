@@ -77,6 +77,7 @@ class GoogleAuthUiClient(
             userId = uid,
             name = displayName,
             profileImage = photoUrl?.toString(),
+            email = email
         )
     }
 
