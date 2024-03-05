@@ -3,7 +3,9 @@ package com.licoding.uber.home.presentation.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -12,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.licoding.uber.R
 import com.licoding.uber.home.domain.models.SaveModel
@@ -24,7 +27,7 @@ fun Save(){
         initialPage = 0,
         initialPageOffsetFraction = 0f,
         pageCount = {
-            Int.MAX_VALUE
+            3
         }
     )
     val savemodels = listOf(
@@ -52,6 +55,9 @@ fun Save(){
             text = "Save everyday",
             fontSize = 20.sp,
             modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(
+            modifier = Modifier.height(20.dp)
         )
         CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
             HorizontalPager(

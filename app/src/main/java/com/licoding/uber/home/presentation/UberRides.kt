@@ -7,18 +7,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.licoding.uber.home.presentation.components.CustomInputField
 import com.licoding.uber.home.presentation.components.Save
 import com.licoding.uber.home.presentation.components.Suggestions
 
 @Composable
-fun UberRides() {
+fun UberRides(navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .padding(15.dp, 25.dp)
     ) {
         item {
-            CustomInputField()
+            CustomInputField(navController)
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))

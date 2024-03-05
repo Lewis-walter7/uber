@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.licoding.uber.home.domain.models.SaveModel
@@ -24,7 +25,7 @@ fun Card(model: SaveModel?) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     Column(
         modifier = Modifier
-            .width(screenWidth / 0.7f)
+            .width(screenWidth / 1.4f)
     ) {
         if (model != null) {
             Image(
@@ -32,16 +33,27 @@ fun Card(model: SaveModel?) {
                 contentDescription = "null",
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
+                    .width(screenWidth /1.4f)
+                    .height(150.dp),
+                contentScale = ContentScale.FillBounds
             )
         }
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
         if (model != null) {
             Text(
-                text = model.label
+                text = model.label,
+                fontWeight = FontWeight.SemiBold
             )
         }
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
         if (model != null) {
             Text(
-                text = model.description
+                text = model.description,
+                fontWeight = FontWeight.Thin
             )
         }
     }

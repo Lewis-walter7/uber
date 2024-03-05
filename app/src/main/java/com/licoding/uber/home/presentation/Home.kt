@@ -46,7 +46,7 @@ fun Home(navController: NavController) {
             }
         }
         if (selectedIndex == 0) {
-            UberRides()
+            UberRides(navController)
         } else {
             UberEats()
         }

@@ -1,6 +1,7 @@
 package com.licoding.uber.home.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -18,9 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun CustomInputField() {
+fun CustomInputField(navController: NavController) {
     var whereTo by remember {
         mutableStateOf("")
     }
@@ -65,6 +67,9 @@ fun CustomInputField() {
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(30.dp))
                 .padding(6.dp)
+                .clickable {
+                    navController.navigate("pickuptime")
+                }
         ){
             Icon(
                 imageVector = Icons.Default.AccessTime,

@@ -22,6 +22,7 @@ import com.licoding.uber.core.domain.models.BottomNavigationItem
 import com.licoding.uber.activity.presentation.Activity
 import com.licoding.uber.auth.data.remote.signup.google.GoogleAuthUiClient
 import com.licoding.uber.home.presentation.Home
+import com.licoding.uber.home.presentation.components.RequestLater
 import com.licoding.uber.profile.presentation.Profile
 import com.licoding.uber.services.presentation.Services
 import com.licoding.uber.ui.theme.UberTheme
@@ -119,6 +120,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("services") {
                                 Services(navController)
+                            }
+                            composable("pickuptime") {
+                                RequestLater(navController)
                             }
                         }
                     }
