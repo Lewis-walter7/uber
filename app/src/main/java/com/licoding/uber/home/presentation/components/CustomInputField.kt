@@ -9,10 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,9 +17,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.licoding.uber.core.presentation.MainUIEvent
 
 @Composable
-fun CustomInputField(navController: NavController) {
+fun CustomInputField(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: () -> Unit) {
     var whereTo by remember {
         mutableStateOf("")
     }
@@ -37,27 +35,37 @@ fun CustomInputField(navController: NavController) {
             imageVector = Icons.Default.Search,
             contentDescription = "search"
         )
-        BasicTextField(
-            decorationBox = {innerTextField ->
-                if(whereTo.isEmpty()) {
-                    Text(
-                        text = "Where to?",
-                        fontSize = 20.sp
-                    )
-                }
-                innerTextField()
-            },
-            value = whereTo,
-            onValueChange = {
-                whereTo = it
-            },
-            modifier = Modifier
-                .padding(10.dp),
-            textStyle = TextStyle(
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onBackground
+//        BasicTextField(
+//            decorationBox = {innerTextField ->
+//                if(whereTo.isEmpty()) {
+//                    Text(
+//                        text = "Where to?",
+//                        fontSize = 20.sp
+//                    )
+//                }
+//                innerTextField()
+//            },
+//            value = whereTo,
+//            onValueChange = {
+//                whereTo = it
+//                onEvent(MainUIEvent.OnSearchQueyChange(whereTo))
+//            },
+//            modifier = Modifier
+//                .padding(10.dp),
+//            textStyle = TextStyle(
+//                fontSize = 20.sp,
+//                color = MaterialTheme.colorScheme.onBackground
+//            )
+//        )
+        TextButton(
+            onClick = {
+                navigate()
+            }
+        ) {
+            Text(
+                text = "Where to?"
             )
-        )
+        }
         VerticalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.background

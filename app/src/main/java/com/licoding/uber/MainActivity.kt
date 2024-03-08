@@ -1,9 +1,11 @@
 package com.licoding.uber
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
@@ -13,6 +15,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -21,6 +25,7 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.licoding.uber.core.domain.models.BottomNavigationItem
 import com.licoding.uber.activity.presentation.Activity
 import com.licoding.uber.auth.data.remote.signup.google.GoogleAuthUiClient
+import com.licoding.uber.core.presentation.MainViewModel
 import com.licoding.uber.home.presentation.Home
 import com.licoding.uber.home.presentation.components.RequestLater
 import com.licoding.uber.profile.presentation.Profile
@@ -39,6 +44,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val viewModel by viewModels<MainViewModel>(
+            factoryProducer = {
+                object : ViewModelProvider.Factory {
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        return MainViewModel(application) as T
+                    }
+                }
+            }
+        )
+        val navigate = {
+            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+        }
         val currentUser = googleAuthUiClient.getSignedInUser()
         setContent {
             var selectedRoute by remember {
@@ -102,7 +119,13 @@ class MainActivity : ComponentActivity() {
                             startDestination = "home"
                         ) {
                             composable("home") {
-                                Home(navController)
+                                Home(
+                                    navController = navController,
+                                    onEvent = viewModel::onEvent,
+                                    navigate = {
+                                        navigate()
+                                    }
+                                )
                             }
                             composable("profile") {
                                 Profile(

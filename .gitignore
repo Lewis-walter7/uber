@@ -14,3 +14,7 @@
 .cxx
 local.properties
 /app/google-services.json
+secrets.properties
+/app/assets/env
+/app/src/main/res/values/strings.xml
+/app/src/main/java/com/licoding/uber/core/domain/services/ApiKeyProvider.kt

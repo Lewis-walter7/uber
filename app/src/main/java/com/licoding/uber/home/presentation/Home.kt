@@ -6,11 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.licoding.uber.R
+import com.licoding.uber.core.presentation.MainUIEvent
 import com.licoding.uber.home.domain.models.Category
 import com.licoding.uber.home.presentation.components.Category
 
 @Composable
-fun Home(navController: NavController) {
+fun Home(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: () -> Unit) {
     val categories = listOf(
         Category(
             label = "Rides",
@@ -46,7 +47,7 @@ fun Home(navController: NavController) {
             }
         }
         if (selectedIndex == 0) {
-            UberRides(navController)
+            UberRides(navController, onEvent, navigate)
         } else {
             UberEats()
         }

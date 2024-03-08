@@ -1,2 +1,5 @@
 /build
 /google-services.json
+../.env
+src/main/res/values/strings.xml
+src/main/java/comlicoding/uber/core/domain/services/ApiKeyProvider.kt

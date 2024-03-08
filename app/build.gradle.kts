@@ -20,7 +20,6 @@ android {
             useSupportLibrary = true
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -35,6 +34,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -77,4 +77,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.play.services.auth)
     implementation(libs.coil.compose)
+
+    implementation(libs.places)
+    //implementation("com.google.android.libraries.maps:maps-compose:3.0.2")
+    implementation(libs.dotenv.kotlin)
 }
