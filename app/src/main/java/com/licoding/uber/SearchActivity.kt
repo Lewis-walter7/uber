@@ -10,6 +10,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,7 +22,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import com.licoding.uber.core.presentation.MainUIEvent
 import com.licoding.uber.core.presentation.MainViewModel
+import com.licoding.uber.search.presentation.MapView
 import com.licoding.uber.search.presentation.SavedPlaces
 import com.licoding.uber.search.presentation.Search
 import com.licoding.uber.ui.theme.UberTheme
@@ -28,7 +33,7 @@ import com.licoding.uber.ui.theme.UberTheme
 class SearchActivity: ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -49,9 +54,11 @@ class SearchActivity: ComponentActivity() {
         if(!checkLocationPermission(permissions)) {
             requestPermissions(permissions)
         } else {
-            requestLocationUpdates(permissions)
+            requestLocationUpdates(permissions, viewModel::onEvent)
         }
+
         setContent {
+            val state by viewModel.state.collectAsState()
             UberTheme {
                 val navController = rememberNavController()
                 Surface(
@@ -65,11 +72,18 @@ class SearchActivity: ComponentActivity() {
                         composable("search") {
                             Search(
                                 onEvent = viewModel::onEvent,
-                                places = viewModel.places
+                                places = viewModel.places,
+                                navController = navController,
+                                nearbyPlaces = viewModel.nearbyPlaces
                             )
                         }
                         composable("saved") {
                             SavedPlaces(navController)
+                        }
+                        composable("mapview") {
+                            MapView(
+                                directions = state.directions,
+                            )
                         }
                     }
                 }
@@ -94,16 +108,16 @@ class SearchActivity: ComponentActivity() {
         }
     }
 
-    private fun requestLocationUpdates(permissions: Array<String>) {
+    private fun requestLocationUpdates(permissions: Array<String>, onEvent:(MainUIEvent) -> Unit) {
         if (checkLocationPermission(permissions)) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
                     if (location != null) {
-                        val latitude = location.latitude
-                        val longitude = location.longitude
+                        val latlng = "${location.latitude}%2C${location.longitude}"
+                        onEvent(MainUIEvent.UpdateLocation(latlng))
                         Toast.makeText(
                             this,
-                            "Latitude: $latitude, Longitude: $longitude",
+                            "Location: ${location.latitude}, ${location.longitude}",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {

@@ -1,6 +1,7 @@
 package com.licoding.uber.search.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,14 +20,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.licoding.uber.core.presentation.MainUIEvent
+import com.licoding.uber.search.models.NearbyPlace
 import com.licoding.uber.search.models.Place
 
 
 @Composable
 fun Search(
     onEvent: (MainUIEvent) -> Unit,
-    places: MutableList<Place>
+    places: MutableSet<Place>,
+    navController: NavController,
+    nearbyPlaces: List<NearbyPlace>
 ) {
 
     var userLocation by remember {
@@ -141,17 +147,79 @@ fun Search(
                 )
             }
         }
-
+        Spacer(modifier = Modifier.height(10.dp))
         if (places.isEmpty() && searchQuery.isNotEmpty()) {
             Text(
                 text = "No places Found"
             )
+        } else if(places.isEmpty() && nearbyPlaces.isNotEmpty()) {
+            LazyColumn {
+                items(nearbyPlaces.toList()) { place ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                            .clickable {
+                                navController.navigate("mapview")
+                                onEvent(MainUIEvent.SetDestination(place.id))
+                            }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null
+                        )
+
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = place.name,
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(
+                                text = place.vicinity,
+                            )
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
+                }
+            }
         } else {
             LazyColumn {
-                items(places) { place ->
-                    Text(
-                        text = place.place
-                    )
+                items(places.toList()) { place ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                            .clickable {
+                                navController.navigate("mapview")
+                                onEvent(MainUIEvent.SetDestination(place.id))
+                            }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null
+                        )
+
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = place.place,
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(
+                                text = place.location,
+                            )
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
                 }
             }
         }

@@ -5,22 +5,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
+import androidx.compose.ui.graphics.Color
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.*
 
 @Composable
-fun MapView(){
+fun MapView(directions: List<LatLng>){
     var uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember {
         mutableStateOf(MapProperties())
     }
+    if (directions.isEmpty()) {
+        return
+    }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(directions.first(), 13f)
+    }
+
     Box(Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.matchParentSize(),
             properties = properties,
-            uiSettings = uiSettings
-        )
+            uiSettings = uiSettings,
+            cameraPositionState = cameraPositionState
+        ) {
+            if(directions.isNotEmpty()) {
+                Polyline(
+                    points = directions,
+                    color = Color.Black,
+                    width = 5f
+                )
+            }
+        }
         Switch(
             checked = uiSettings.zoomControlsEnabled,
             onCheckedChange = {
@@ -29,3 +46,5 @@ fun MapView(){
         )
     }
 }
+
+

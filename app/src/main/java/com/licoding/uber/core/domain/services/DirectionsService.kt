@@ -3,16 +3,17 @@ package com.licoding.uber.core.domain.services
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import com.licoding.uber.core.data.remote.client
-import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import org.json.JSONObject
 
 object DirectionsService {
 
     suspend fun getDirections(origin: String, destination: String): List<LatLng> {
-        val url = "https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=${ApiKeyProvider.APIKEY}"
+        val url =
+            "https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=${ApiKeyProvider.DIRECTIONS_API_KEY}"
         val response = client.get(url)
-        val json = response.body<String>()
+        val json = response.bodyAsText()
 
         return parseDirections(json)
     }

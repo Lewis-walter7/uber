@@ -19,7 +19,7 @@ class PlacesService(private val context: Context) {
     private val placesClient = Places.createClient(context)
 
     private var autocompletePredictions =  mutableListOf<AutocompletePrediction>()
-    var places = mutableListOf<Place>()
+    var places = mutableSetOf<Place>()
     fun findPlaceSuggestions(searchQuery: String){
         places.clear()
         val token = AutocompleteSessionToken.newInstance()
@@ -27,15 +27,14 @@ class PlacesService(private val context: Context) {
             .setQuery(searchQuery)
             .setSessionToken(token)
             .build()
-
         placesClient.findAutocompletePredictions(request)
             .addOnSuccessListener { response ->
                 autocompletePredictions = response.autocompletePredictions
 
                 autocompletePredictions.forEach { prediction ->
-                    println(prediction)
                     val place = Place(
-                        place = prediction.getFullText(null).toString(),
+                        id = prediction.placeId,
+                        place = prediction.getPrimaryText(null).toString(),
                         location = prediction.getSecondaryText(null).toString()
                     )
                     places.add(place)
