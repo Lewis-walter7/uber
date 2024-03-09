@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.licoding.uber.core.domain.services.PlacesService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class MainViewModel(
     context: Context,
@@ -19,6 +20,14 @@ class MainViewModel(
         when (event) {
             is MainUIEvent.OnSearchQueyChange -> {
                 placesService.findPlaceSuggestions(searchQuery = event.searchQuery)
+            }
+
+            is MainUIEvent.SetDestination -> {
+                _state.update {
+                    it.copy(
+                        destination = event.destination
+                    )
+                }
             }
         }
     }

@@ -20,7 +20,7 @@ fun UberRides(navController: NavController, onEvent: (MainUIEvent) -> Unit, navi
             .padding(15.dp, 25.dp)
     ) {
         item {
-            CustomInputField(navController, onEvent, navigate)
+            CustomInputField(navController, navigate)
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))

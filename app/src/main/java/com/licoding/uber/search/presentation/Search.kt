@@ -1,6 +1,5 @@
 package com.licoding.uber.search.presentation
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,12 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.licoding.uber.core.presentation.MainUIEvent
+import com.licoding.uber.search.models.Place
 
 
 @Composable
 fun Search(
     onEvent: (MainUIEvent) -> Unit,
-    places: List<String>
+    places: MutableList<Place>
 ) {
 
     var userLocation by remember {
@@ -33,6 +33,9 @@ fun Search(
     }
     var searchQuery by remember {
         mutableStateOf("")
+    }
+    LaunchedEffect(searchQuery) {
+        onEvent(MainUIEvent.OnSearchQueyChange(searchQuery))
     }
     Column(
         modifier = Modifier
@@ -115,7 +118,7 @@ fun Search(
                 BasicTextField(
                     onValueChange = {
                          searchQuery = it
-                        onEvent(MainUIEvent.OnSearchQueyChange(searchQuery))
+                        //onEvent(MainUIEvent.OnSearchQueyChange(searchQuery))
                     },
                     value = searchQuery,
                     decorationBox = { innerTextField ->
@@ -139,7 +142,7 @@ fun Search(
             }
         }
 
-        if (places.isEmpty()) {
+        if (places.isEmpty() && searchQuery.isNotEmpty()) {
             Text(
                 text = "No places Found"
             )
@@ -147,7 +150,7 @@ fun Search(
             LazyColumn {
                 items(places) { place ->
                     Text(
-                        text = place
+                        text = place.place
                     )
                 }
             }

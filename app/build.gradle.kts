@@ -81,4 +81,22 @@ dependencies {
     implementation(libs.places)
     //implementation("com.google.android.libraries.maps:maps-compose:3.0.2")
     implementation(libs.dotenv.kotlin)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.json)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.serialization)
+
+
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
+    implementation(libs.android.maps.utils)
 }
+
+
+

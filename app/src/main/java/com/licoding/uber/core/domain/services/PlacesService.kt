@@ -6,6 +6,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.licoding.uber.search.models.Place
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +19,9 @@ class PlacesService(private val context: Context) {
     private val placesClient = Places.createClient(context)
 
     private var autocompletePredictions =  mutableListOf<AutocompletePrediction>()
-    var places = mutableListOf<String>()
+    var places = mutableListOf<Place>()
     fun findPlaceSuggestions(searchQuery: String){
+        places.clear()
         val token = AutocompleteSessionToken.newInstance()
         val request = FindAutocompletePredictionsRequest.builder()
             .setQuery(searchQuery)
@@ -31,9 +33,14 @@ class PlacesService(private val context: Context) {
                 autocompletePredictions = response.autocompletePredictions
 
                 autocompletePredictions.forEach { prediction ->
-                    places.add(prediction.getFullText(null).toString())
+                    println(prediction)
+                    val place = Place(
+                        place = prediction.getFullText(null).toString(),
+                        location = prediction.getSecondaryText(null).toString()
+                    )
+                    places.add(place)
                 }
-            }.addOnFailureListener { exception ->
+            }.addOnFailureListener {
                 scope.launch {
                     Toast.makeText(context, "No places Found", Toast.LENGTH_SHORT).show()
                 }

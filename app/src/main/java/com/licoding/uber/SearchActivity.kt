@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.licoding.uber.core.presentation.MainViewModel
+import com.licoding.uber.search.presentation.SavedPlaces
 import com.licoding.uber.search.presentation.Search
 import com.licoding.uber.ui.theme.UberTheme
 
@@ -32,6 +33,10 @@ class SearchActivity: ComponentActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val permissions =  arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         val viewModel by viewModels<MainViewModel>(
             factoryProducer = {
                 object : ViewModelProvider.Factory {
@@ -41,10 +46,10 @@ class SearchActivity: ComponentActivity() {
                 }
             }
         )
-        if(!checkLocationPermission()) {
-            requestPermissions()
+        if(!checkLocationPermission(permissions)) {
+            requestPermissions(permissions)
         } else {
-            requestLocationUpdates()
+            requestLocationUpdates(permissions)
         }
         setContent {
             UberTheme {
@@ -63,35 +68,37 @@ class SearchActivity: ComponentActivity() {
                                 places = viewModel.places
                             )
                         }
+                        composable("saved") {
+                            SavedPlaces(navController)
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun requestPermissions() {
+    private fun requestPermissions(permissions: Array<String>) {
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
+           permissions,
             0
         )
     }
 
-    private fun checkLocationPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun checkLocationPermission(permissions: Array<String>): Boolean {
+        return permissions.all {perm ->
+            ContextCompat.checkSelfPermission(
+                this,
+                perm
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
-    fun requestLocationUpdates() {
-        if (checkLocationPermission()) {
+    private fun requestLocationUpdates(permissions: Array<String>) {
+        if (checkLocationPermission(permissions)) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
                     if (location != null) {
-                        // Use the location here
                         val latitude = location.latitude
                         val longitude = location.longitude
                         Toast.makeText(

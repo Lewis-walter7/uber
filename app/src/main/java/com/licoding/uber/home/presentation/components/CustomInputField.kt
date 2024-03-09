@@ -20,10 +20,8 @@ import androidx.navigation.NavController
 import com.licoding.uber.core.presentation.MainUIEvent
 
 @Composable
-fun CustomInputField(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: () -> Unit) {
-    var whereTo by remember {
-        mutableStateOf("")
-    }
+fun CustomInputField(navController: NavController, navigate: () -> Unit) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,46 +29,29 @@ fun CustomInputField(navController: NavController, onEvent: (MainUIEvent) -> Uni
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "search"
-        )
-//        BasicTextField(
-//            decorationBox = {innerTextField ->
-//                if(whereTo.isEmpty()) {
-//                    Text(
-//                        text = "Where to?",
-//                        fontSize = 20.sp
-//                    )
-//                }
-//                innerTextField()
-//            },
-//            value = whereTo,
-//            onValueChange = {
-//                whereTo = it
-//                onEvent(MainUIEvent.OnSearchQueyChange(whereTo))
-//            },
-//            modifier = Modifier
-//                .padding(10.dp),
-//            textStyle = TextStyle(
-//                fontSize = 20.sp,
-//                color = MaterialTheme.colorScheme.onBackground
-//            )
-//        )
-        TextButton(
-            onClick = {
-                navigate()
-            }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Where to?"
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "search"
             )
+            TextButton(
+                onClick = {
+                    navigate()
+                }
+            ) {
+                Text(
+                    text = "Where to?",
+                    fontSize = 20.sp
+                )
+            }
         }
         VerticalDivider(
             thickness = 1.dp,
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.onBackground
         )
-
         Row(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(30.dp))
