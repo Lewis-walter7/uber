@@ -4,5 +4,6 @@ import androidx.compose.ui.graphics.painter.Painter
 
 data class Suggestion(
     val image: Painter,
-    val label: String
+    val label: String,
+    val route: String
 )

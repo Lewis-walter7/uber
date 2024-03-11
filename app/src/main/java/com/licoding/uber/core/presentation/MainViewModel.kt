@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.licoding.uber.core.domain.services.DirectionsService
 import com.licoding.uber.core.domain.services.NearbyPlacesService
 import com.licoding.uber.core.domain.services.PlacesService
-import com.licoding.uber.search.models.NearbyPlace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,8 +20,6 @@ class MainViewModel(
     private val _state = MutableStateFlow(MainUIState(placesService.places))
     val state = _state.asStateFlow()
     val places = placesService.places
-    var nearbyPlaces: List<NearbyPlace> = emptyList()
-
     fun onEvent(event: MainUIEvent) {
         when (event) {
             is MainUIEvent.OnSearchQueyChange -> {
@@ -40,12 +37,13 @@ class MainViewModel(
                     val directions =
                         DirectionsService.getDirections(
                             origin = "${state.value.location}",
-                            "place_id:${state.value.destination}"
+                            destination = "place_id:${state.value.destination}"
                         )
                     delay(1000)
                     _state.update {
                         it.copy(
-                            directions = directions
+                            directions = directions,
+                            distance = DirectionsService.result
                         )
                     }
                 }
@@ -55,12 +53,10 @@ class MainViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            location = event.location
+                            location = event.location,
+                            nearbyPlaces = NearbyPlacesService.getNearbyPlaces(event.location).take(5)
                         )
                     }
-                    delay(200)
-                    nearbyPlaces = NearbyPlacesService.getNearbyPlaces(event.location).take(5)
-                    println(nearbyPlaces)
                 }
             }
         }

@@ -11,7 +11,7 @@ import com.licoding.uber.home.domain.models.Category
 import com.licoding.uber.home.presentation.components.Category
 
 @Composable
-fun Home(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: () -> Unit) {
+fun Home(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: (String) -> Unit) {
     val categories = listOf(
         Category(
             label = "Rides",

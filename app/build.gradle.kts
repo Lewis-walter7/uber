@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.ktor.serialization)
 
 
+    //maps
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
     implementation(libs.android.maps.utils)

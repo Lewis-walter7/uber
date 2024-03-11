@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ExpandMore
@@ -13,14 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.licoding.uber.core.presentation.MainUIEvent
 
 @Composable
-fun CustomInputField(navController: NavController, navigate: () -> Unit) {
+fun CustomInputField(navController: NavController, navigate: (String) -> Unit) {
 
     Row(
         modifier = Modifier
@@ -39,7 +36,7 @@ fun CustomInputField(navController: NavController, navigate: () -> Unit) {
             )
             TextButton(
                 onClick = {
-                    navigate()
+                    navigate("search")
                 }
             ) {
                 Text(

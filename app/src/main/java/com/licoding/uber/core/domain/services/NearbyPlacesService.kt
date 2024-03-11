@@ -18,8 +18,6 @@ object NearbyPlacesService {
         val jsonObject = JSONObject(json)
         val resultsArray = jsonObject.getJSONArray("results")
 
-        val resultObject1 = resultsArray.getJSONObject(0)
-
         for(i in 0 until resultsArray.length()) {
             val resultObject = resultsArray.getJSONObject(i)
             val rating = resultObject.getDouble("rating")

@@ -2,6 +2,7 @@ package com.licoding.uber.home.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +23,11 @@ import com.licoding.uber.R
 import com.licoding.uber.home.domain.models.Suggestion
 
 @Composable
-fun Suggestions() {
+fun Suggestions(
+    title: String,
+    showText : Boolean,
+    navigate: (String) -> Unit
+) {
     val breakPointIndex = 5
     val pickup = "Store Pickup"
     val anotherNetwork = buildAnnotatedString {
@@ -38,19 +43,23 @@ fun Suggestions() {
     val suggestions = listOf(
         Suggestion(
             image = painterResource(R.drawable.ubercar),
-            label = "Uber"
+            label = "Uber",
+            route = "search"
         ),
         Suggestion(
             image = painterResource(R.drawable.box),
-            label = "Package"
+            label = "Package",
+            route = "package"
         ),
         Suggestion(
             image = painterResource(R.drawable.reserve),
-            label = "Reserve"
+            label = "Reserve",
+            route = "reserve"
         ),
         Suggestion(
             image = painterResource(R.drawable.pickup),
-            label = anotherNetwork
+            label = anotherNetwork,
+            route = "store"
         )
     )
 
@@ -67,22 +76,25 @@ fun Suggestions() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Suggestions",
+                text = title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
 
-            TextButton(
-                onClick = {
+            if (showText) {
+                TextButton(
+                    onClick = {
 
+                    }
+                ) {
+                    Text(
+                        text = "See All",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
-            ) {
-                Text(
-                    text = "See All",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -90,7 +102,11 @@ fun Suggestions() {
         ) {
             suggestions.forEach { suggestion ->
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .clickable {
+                            navigate(suggestion.route)
+                        }
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,

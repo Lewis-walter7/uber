@@ -22,12 +22,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
 import com.licoding.uber.core.presentation.MainUIEvent
 import com.licoding.uber.core.presentation.MainViewModel
-import com.licoding.uber.search.presentation.MapView
-import com.licoding.uber.search.presentation.SavedPlaces
-import com.licoding.uber.search.presentation.Search
+import com.licoding.uber.search.presentation.*
 import com.licoding.uber.ui.theme.UberTheme
 
 class SearchActivity: ComponentActivity() {
@@ -38,6 +35,7 @@ class SearchActivity: ComponentActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+         val route = intent.getStringExtra("route")
         val permissions =  arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -67,23 +65,26 @@ class SearchActivity: ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "search"
+                        startDestination = route!!
                     ) {
                         composable("search") {
                             Search(
                                 onEvent = viewModel::onEvent,
                                 places = viewModel.places,
                                 navController = navController,
-                                nearbyPlaces = viewModel.nearbyPlaces
+                                state = state
                             )
                         }
                         composable("saved") {
                             SavedPlaces(navController)
                         }
                         composable("mapview") {
-                            MapView(
+                            CarOptions(
                                 directions = state.directions,
                             )
+                        }
+                        composable("package") {
+                           Package()
                         }
                     }
                 }

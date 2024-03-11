@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.licoding.uber.core.domain.models.BottomNavigationItem
@@ -53,8 +52,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-        val navigate = {
-            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+        fun navigate(route: String){
+            val intent = Intent(this@MainActivity, SearchActivity::class.java)
+            intent.putExtra("route", route)
+            startActivity(intent)
         }
         val currentUser = googleAuthUiClient.getSignedInUser()
         setContent {
@@ -123,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     onEvent = viewModel::onEvent,
                                     navigate = {
-                                        navigate()
+                                        navigate(it)
                                     }
                                 )
                             }
@@ -142,7 +143,12 @@ class MainActivity : ComponentActivity() {
                                 Activity(navController)
                             }
                             composable("services") {
-                                Services(navController)
+                                Services(
+                                    navController = navController,
+                                    navigate = {
+                                        navigate("package")
+                                    }
+                                )
                             }
                             composable("pickuptime") {
                                 RequestLater(navController)

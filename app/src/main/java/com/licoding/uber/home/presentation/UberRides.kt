@@ -14,7 +14,7 @@ import com.licoding.uber.home.presentation.components.Save
 import com.licoding.uber.home.presentation.components.Suggestions
 
 @Composable
-fun UberRides(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: () -> Unit) {
+fun UberRides(navController: NavController, onEvent: (MainUIEvent) -> Unit, navigate: (String) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .padding(15.dp, 25.dp)
@@ -26,7 +26,7 @@ fun UberRides(navController: NavController, onEvent: (MainUIEvent) -> Unit, navi
             Spacer(modifier = Modifier.height(20.dp))
         }
         item {
-            Suggestions()
+            Suggestions(title = "Suggestions", true, navigate)
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))

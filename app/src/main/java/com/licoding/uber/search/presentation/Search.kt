@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.licoding.uber.core.presentation.MainUIEvent
+import com.licoding.uber.core.presentation.MainUIState
 import com.licoding.uber.search.models.NearbyPlace
 import com.licoding.uber.search.models.Place
 
@@ -31,7 +32,7 @@ fun Search(
     onEvent: (MainUIEvent) -> Unit,
     places: MutableSet<Place>,
     navController: NavController,
-    nearbyPlaces: List<NearbyPlace>
+    state: MainUIState
 ) {
 
     var userLocation by remember {
@@ -152,9 +153,9 @@ fun Search(
             Text(
                 text = "No places Found"
             )
-        } else if(places.isEmpty() && nearbyPlaces.isNotEmpty()) {
+        } else if(places.isEmpty() && state.nearbyPlaces.isNotEmpty()) {
             LazyColumn {
-                items(nearbyPlaces.toList()) { place ->
+                items(state.nearbyPlaces) { place ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
